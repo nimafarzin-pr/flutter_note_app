@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "324355555530",
+    "project_id": "nimafiretest",
+    "storage_bucket": "nimafiretest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:324355555530:android:f198a69d4f346dbe623433",
+        "android_client_info": {
+          "package_name": "com.example.fl_test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "324355555530-e4a34mrbn8kvr81f7d2utpils764ejng.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdHGvOEIefTZmqHMqW9ra23z355RCEIQM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "324355555530-e4a34mrbn8kvr81f7d2utpils764ejng.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "324355555530-2otabrrjfk7bk1adev0pr6dg9kmf2qr5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flTest"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
