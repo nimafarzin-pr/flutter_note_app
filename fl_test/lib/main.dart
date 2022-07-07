@@ -1,9 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:fl_test/constant/consts.dart';
-import 'package:fl_test/firebase_options.dart';
 import 'package:fl_test/screens/home_page.dart';
 import 'package:fl_test/screens/login_page.dart';
 import 'package:fl_test/screens/signup_page.dart';
@@ -11,60 +6,12 @@ import 'package:fl_test/screens/verification_page.dart';
 import 'package:fl_test/screens/views/create_or_update_note_view.dart';
 import 'package:fl_test/screens/views/note_view.dart';
 import 'package:flutter/material.dart';
-
-import 'dart:developer' as devtool show log;
-import 'package:meta/meta.dart';
-
-// extension Log on Object {
-//   void log() => devtool.log(toString());
-// }
-
-// extension GetOnUri on Object {
-//   Future<HttpClientResponse> getUrl(String url) => HttpClient()
-//       .getUrl(
-//         Uri.parse(url),
-//       )
-//       .then(
-//         (req) => req.close(),
-//       );
-// }
-
-// //spacify mixin on type of Animal
-// mixin canMakeGetCall {
-//   String get url;
-//   @useResult
-//   Future<String> getString() => getUrl(url).then(
-//         (response) => response.transform(utf8.decoder).join(),
-//       );
-// }
-
-// @immutable
-// class GetEmploee with canMakeGetCall {
-//   const GetEmploee();
-
-//   @override
-//   // TODO: implement url
-//   String get url => 'http://127.0.0.1:5500/lib/apis/employee.json';
-// }
-
-// void testIt() async {
-//   final emploee = await const GetEmploee().getString();
-//   emploee.log();
-// }
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const _MyApp());
 }
-
-// class _Root extends StatelessWidget {
-//   const _Root({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return const _MyApp();
-//   }
-// }
 
 class _MyApp extends StatefulWidget {
   const _MyApp({Key? key}) : super(key: key);
@@ -76,10 +23,9 @@ class _MyApp extends StatefulWidget {
 class __MyAppState extends State<_MyApp> {
   @override
   Widget build(BuildContext context) {
-    // testIt();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: const BlocHomePage(),
       routes: <String, WidgetBuilder>{
         loginRoute: (BuildContext context) => const LoginPage(),
         signupRoute: (BuildContext context) => const SignUpPage(),
@@ -94,5 +40,145 @@ class __MyAppState extends State<_MyApp> {
       //     backgroundColor: Colors.green[50],
       //     body: const LoginPage()),
     );
+  }
+}
+
+class BlocHomePage extends StatefulWidget {
+  const BlocHomePage({Key? key}) : super(key: key);
+
+  @override
+  State<BlocHomePage> createState() => _BlocHomePageState();
+}
+
+class _BlocHomePageState extends State<BlocHomePage>
+    with SingleTickerProviderStateMixin {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => CounterBloc(),
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Bloc test')),
+        // BlocConsumer conbination of bloc lidtener and bloc builder when nees lesten and rebuild
+        body: BlocConsumer<CounterBloc, CounterState>(
+          listener: (context, state) {
+            _controller.clear();
+          },
+          builder: (context, state) {
+            final invalidValue =
+                (state is CounterStateInvalidNumber) ? state.inValidValue : "";
+            return Column(
+              children: [
+                Text('Current value is : ${state.value}'),
+                Visibility(
+                  child: Text('Invalid input: $invalidValue'),
+                  visible: state is CounterStateInvalidNumber,
+                ),
+                TextField(
+                  controller: _controller,
+                  decoration:
+                      const InputDecoration(hintText: "Enter number here :"),
+                  keyboardType: TextInputType.number,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        final bloc = context.read<CounterBloc>();
+                        bloc.add(DecrementEvent(_controller.text));
+                      },
+                      child: const Text('-'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        final bloc = context.read<CounterBloc>();
+                        bloc.add(IncrementEvent(_controller.text));
+                      },
+                      child: const Text('+'),
+                    )
+                  ],
+                )
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+@immutable
+class CounterState {
+  final int value;
+  const CounterState(this.value);
+}
+
+@immutable
+abstract class CounterEvent {
+  final String value;
+  const CounterEvent(this.value);
+}
+
+class CounterStateValid extends CounterState {
+  const CounterStateValid(int value) : super(value);
+}
+
+class CounterStateInvalidNumber extends CounterState {
+  final String inValidValue;
+
+  const CounterStateInvalidNumber(
+      {required this.inValidValue, required int previousValue})
+      : super(previousValue);
+}
+
+class IncrementEvent extends CounterEvent {
+  const IncrementEvent(String value) : super(value);
+}
+
+class DecrementEvent extends CounterEvent {
+  const DecrementEvent(String value) : super(value);
+}
+
+class CounterBloc extends Bloc<CounterEvent, CounterState> {
+  CounterBloc() : super(const CounterStateValid(0)) {
+    //? event give you value and event
+    //? emit allos you to pass state out
+    on<IncrementEvent>((event, emit) {
+      final integer = int.tryParse(event.value);
+      if (integer == null) {
+        emit(
+          CounterStateInvalidNumber(
+              inValidValue: event.value, previousValue: state.value),
+        );
+      } else {
+        emit(CounterStateValid(state.value + integer));
+      }
+    });
+
+    on<DecrementEvent>((event, emit) {
+      final integer = int.tryParse(event.value);
+      if (integer == null) {
+        emit(
+          CounterStateInvalidNumber(
+              inValidValue: event.value, previousValue: state.value),
+        );
+      } else {
+        emit(CounterStateValid(state.value - integer));
+      }
+    });
   }
 }
