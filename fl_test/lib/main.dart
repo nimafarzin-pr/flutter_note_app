@@ -5,6 +5,9 @@ import 'package:fl_test/screens/signup_page.dart';
 import 'package:fl_test/screens/verification_page.dart';
 import 'package:fl_test/screens/views/create_or_update_note_view.dart';
 import 'package:fl_test/screens/views/note_view.dart';
+import 'package:fl_test/services/auth/auth_provider.dart';
+import 'package:fl_test/services/auth/bloc/auth_bloc.dart';
+import 'package:fl_test/services/auth/firebase_auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,7 +28,10 @@ class __MyAppState extends State<_MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const BlocHomePage(),
+      home: BlocProvider<AuthBloc>(
+        create: (context) => AuthBloc(FireBaseAuthProvider()),
+        child: const HomePage(),
+      ),
       routes: <String, WidgetBuilder>{
         loginRoute: (BuildContext context) => const LoginPage(),
         signupRoute: (BuildContext context) => const SignUpPage(),
@@ -43,14 +49,14 @@ class __MyAppState extends State<_MyApp> {
   }
 }
 
-class BlocHomePage extends StatefulWidget {
-  const BlocHomePage({Key? key}) : super(key: key);
+class BlocTestingHomePage extends StatefulWidget {
+  const BlocTestingHomePage({Key? key}) : super(key: key);
 
   @override
-  State<BlocHomePage> createState() => _BlocHomePageState();
+  State<BlocTestingHomePage> createState() => _BlocTestingHomePageState();
 }
 
-class _BlocHomePageState extends State<BlocHomePage>
+class _BlocTestingHomePageState extends State<BlocTestingHomePage>
     with SingleTickerProviderStateMixin {
   late TextEditingController _controller;
 

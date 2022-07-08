@@ -2,10 +2,13 @@ import 'package:fl_test/constant/consts.dart';
 import 'package:fl_test/enums/menu_actions.dart';
 import 'package:fl_test/screens/views/nots_list_views.dart';
 import 'package:fl_test/services/auth/auth_service.dart';
+import 'package:fl_test/services/auth/bloc/auth_bloc.dart';
+import 'package:fl_test/services/auth/bloc/bloc_event.dart';
 import 'package:fl_test/services/cloud/cloud_note.dart';
 import 'package:fl_test/services/cloud/firebase_cloud_storage.dart';
 import 'package:fl_test/utils/dialog/logout_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class NoteView extends StatefulWidget {
   const NoteView({Key? key}) : super(key: key);
@@ -44,14 +47,8 @@ class _NoteViewState extends State<NoteView> {
                     context,
                   );
                   if (shouldLogOut) {
-                    await AuthService.fireBase().logOut();
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                      loginRoute,
-                      (_) => false,
-                    );
+                    context.read<AuthBloc>().add(const AuthEventLogOut());
                   }
-                  break;
-                default:
               }
             },
             itemBuilder: (context) {

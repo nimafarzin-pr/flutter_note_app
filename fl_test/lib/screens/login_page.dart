@@ -1,8 +1,11 @@
 import 'package:fl_test/constant/consts.dart';
 import 'package:fl_test/services/auth/auth_exception.dart';
 import 'package:fl_test/services/auth/auth_service.dart';
+import 'package:fl_test/services/auth/bloc/auth_bloc.dart';
+import 'package:fl_test/services/auth/bloc/bloc_event.dart';
 import 'package:fl_test/utils/dialog/error_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 
 class LoginPage extends StatefulWidget {
@@ -85,16 +88,9 @@ class _LoginPageState extends State<LoginPage> {
                           final email = _email.text;
                           final password = _pass.text;
                           try {
-                            await AuthService.fireBase()
-                                .login(email: email, password: password);
-                            final user = AuthService.fireBase().currentUser;
-                            if (user?.isEmailVerified ?? false) {
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                  homeRoute, (_) => false);
-                            } else {
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                  verificationRoute, (_) => false);
-                            }
+                            context.read<AuthBloc>().add(
+                                  AuthEventLogin(email, password),
+                                );
                           } on UserNotFoundAuthException {
                             await showErrorDialog(
                               context,

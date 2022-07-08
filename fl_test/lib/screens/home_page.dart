@@ -1,8 +1,11 @@
 import 'package:fl_test/screens/login_page.dart';
 import 'package:fl_test/screens/verification_page.dart';
 import 'package:fl_test/screens/views/note_view.dart';
-import 'package:fl_test/services/auth/auth_service.dart';
+import 'package:fl_test/services/auth/bloc/auth_bloc.dart';
+import 'package:fl_test/services/auth/bloc/bloc_event.dart';
+import 'package:fl_test/services/auth/bloc/bloc_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,24 +17,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: AuthService.fireBase().initialze(),
-        builder: ((context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              final user = AuthService.fireBase().currentUser;
-              if (user != null) {
-                if (user.isEmailVerified) {
-                  return const NoteView();
-                } else {
-                  return const VerificationPage();
-                }
-              } else {
-                return const LoginPage();
-              }
-            default:
-              return const CircularProgressIndicator();
-          }
-        }));
+    context.read<AuthBloc>().add(const AuthEventInitialized());
+
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        if (state is AuthStateLoggedIn) {
+          return const NoteView();
+        } else if (state is AuthStateNeedVerification) {
+          return const VerificationPage();
+        } else if (state is AuthStateLoggedOut) {
+          return const LoginPage();
+        } else {
+          return const Scaffold(
+            body: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
   }
 }
