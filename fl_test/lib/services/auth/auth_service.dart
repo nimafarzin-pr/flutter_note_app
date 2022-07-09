@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fl_test/services/auth/auth_exception.dart';
 import 'package:fl_test/services/auth/auth_provider.dart';
 import 'package:fl_test/services/auth/auth_user.dart';
 import 'package:fl_test/services/auth/firebase_auth_provider.dart';
@@ -37,4 +39,8 @@ class AuthService implements AuthProvider {
 
   @override
   Future<void> initialze() => authProvider.initialze();
+
+  @override
+  Future<void> sendPasswordReset({required String toEmail}) =>
+      authProvider.sendPasswordReset(toEmail: toEmail);
 }

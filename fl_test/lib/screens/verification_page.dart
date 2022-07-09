@@ -1,6 +1,9 @@
-import 'package:fl_test/constant/consts.dart';
+import 'package:fl_test/constant/route.dart';
 import 'package:fl_test/services/auth/auth_service.dart';
+import 'package:fl_test/services/auth/bloc/auth_bloc.dart';
+import 'package:fl_test/services/auth/bloc/bloc_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class VerificationPage extends StatefulWidget {
   const VerificationPage({Key? key}) : super(key: key);
@@ -22,15 +25,15 @@ class _VerificationPageState extends State<VerificationPage> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(primary: Colors.green),
               onPressed: () async {
-                await AuthService.fireBase().sendEmailVerification();
+                context
+                    .read<AuthBloc>()
+                    .add(const AuthEventSendEmailVerification());
               },
               child: const Text('Send email verification'),
             ),
             TextButton(
                 onPressed: () async {
-                  AuthService.fireBase().logOut();
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil(signupRoute, (_) => false);
+                  context.read<AuthBloc>().add(const AuthEventLogOut());
                 },
                 child: const Text(
                   'Restart',

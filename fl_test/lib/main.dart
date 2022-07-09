@@ -1,4 +1,4 @@
-import 'package:fl_test/constant/consts.dart';
+import 'package:fl_test/constant/route.dart';
 import 'package:fl_test/screens/home_page.dart';
 import 'package:fl_test/screens/login_page.dart';
 import 'package:fl_test/screens/signup_page.dart';
@@ -33,9 +33,6 @@ class __MyAppState extends State<_MyApp> {
         child: const HomePage(),
       ),
       routes: <String, WidgetBuilder>{
-        loginRoute: (BuildContext context) => const LoginPage(),
-        signupRoute: (BuildContext context) => const SignUpPage(),
-        verificationRoute: (BuildContext context) => const VerificationPage(),
         homeRoute: (BuildContext context) => const HomePage(),
         noteViewRoute: (BuildContext context) => const NoteView(),
         createOrUpdateNoteViewRoute: (BuildContext context) =>
