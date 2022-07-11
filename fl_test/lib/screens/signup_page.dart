@@ -1,16 +1,10 @@
-import 'dart:convert';
-
-import 'package:fl_test/constant/route.dart';
 import 'package:fl_test/services/auth/auth_exception.dart';
-import 'package:fl_test/services/auth/auth_service.dart';
 import 'package:fl_test/services/auth/bloc/auth_bloc.dart';
 import 'package:fl_test/services/auth/bloc/bloc_event.dart';
 import 'package:fl_test/services/auth/bloc/bloc_state.dart';
 import 'package:fl_test/utils/dialog/error_dialog.dart';
-import 'package:fl_test/utils/dialog/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -22,12 +16,12 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   late final TextEditingController _email;
   late final TextEditingController _pass;
-  CloseDialog? _closeDialogHandle;
 
   @override
   void initState() {
     _email = TextEditingController();
     _pass = TextEditingController();
+    super.initState();
   }
 
   @override
@@ -51,22 +45,11 @@ class _SignUpPageState extends State<SignUpPage> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Lottie.network(
-                  'https://assets6.lottiefiles.com/packages/lf20_ZdVYgO.json',
-                  alignment: Alignment.topCenter,
-                  fit: BoxFit.contain,
-                  height: double.infinity,
-                  width: double.infinity),
               SingleChildScrollView(
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Lottie.network(
-                      'https://assets3.lottiefiles.com/packages/lf20_0w4fvbov.json',
-                      alignment: Alignment.topCenter,
-                      height: 200,
-                      width: double.infinity),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
                     child: SizedBox(

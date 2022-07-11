@@ -3,10 +3,8 @@ import 'package:fl_test/services/auth/bloc/auth_bloc.dart';
 import 'package:fl_test/services/auth/bloc/bloc_event.dart';
 import 'package:fl_test/services/auth/bloc/bloc_state.dart';
 import 'package:fl_test/utils/dialog/error_dialog.dart';
-import 'package:fl_test/utils/dialog/loading_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lottie/lottie.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -23,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     _email = TextEditingController();
     _pass = TextEditingController();
+    super.initState();
   }
 
   @override
@@ -53,31 +52,19 @@ class _LoginPageState extends State<LoginPage> {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Lottie.network(
-                    'https://assets3.lottiefiles.com/private_files/lf30_d8vue0c7.json',
-                    alignment: Alignment.topCenter,
-                    fit: BoxFit.contain,
-                    height: double.infinity,
-                    width: double.infinity),
-              ),
               SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Lottie.network(
-                        'https://assets3.lottiefiles.com/packages/lf20_0w4fvbov.json',
-                        alignment: Alignment.topCenter,
-                        height: 200,
-                        width: double.infinity),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
                       child: SizedBox(
                         // width: 200,
                         child: TextField(
                           controller: _email,
+                          autocorrect: false,
+                          autofocus: false,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: 'Email',
@@ -91,6 +78,8 @@ class _LoginPageState extends State<LoginPage> {
                       child: TextField(
                         controller: _pass,
                         obscureText: true,
+                        autofocus: false,
+                        autocorrect: false,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Password',

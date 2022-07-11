@@ -1,5 +1,3 @@
-import 'package:fl_test/constant/route.dart';
-import 'package:fl_test/services/auth/auth_service.dart';
 import 'package:fl_test/services/auth/bloc/auth_bloc.dart';
 import 'package:fl_test/services/auth/bloc/bloc_event.dart';
 import 'package:flutter/material.dart';
